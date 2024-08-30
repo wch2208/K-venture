@@ -1,5 +1,4 @@
-import Image from 'next/image';
-
+import MinusIcon from '@/assets/icons/icon_minus.svg';
 import { Schedule as ScheduleType } from '@/types/activityTypes';
 
 interface DateProps {
@@ -32,7 +31,7 @@ export default function Schedule({ schedule, onClickDelete }: DateProps) {
           type="button"
           onClick={onClickDelete}
         >
-          <Image src="/assets/icons/icon_minus.svg" alt="날짜 제거" fill />
+          <MinusIcon className="edit-icon-size" />
         </button>
       </div>
     </div>

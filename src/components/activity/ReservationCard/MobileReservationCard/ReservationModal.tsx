@@ -29,7 +29,7 @@ function ReservationModal({
   useScrollLock({ isOpen: isToggleModal });
 
   return (
-    <div className="fixed inset-0 z-30 flex h-full w-full animate-slideTop flex-col items-center bg-white pt-6">
+    <div className="fixed inset-0 flex animate-slideTop flex-col items-center bg-white pt-6">
       {reservationState.step === 1 && (
         <Step1MobileCard
           onClick={onClick}
@@ -44,7 +44,7 @@ function ReservationModal({
       )}
       <div className="w-full max-w-[432px] px-[16px]">
         <Button
-          className="my-[16px] h-[56px] w-full rounded-[4px] bg-kv-primary-blue text-white"
+          className="my-[16px] h-[56px] w-full rounded-[4px] bg-kv-primary-blue text-white hover:bg-kv-primary-blue-hover"
           onClick={onClick.handleNextStepClick}
         >
           확인

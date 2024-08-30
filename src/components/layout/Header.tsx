@@ -1,9 +1,11 @@
 import { getCookie } from 'cookies-next';
 import { useAtom } from 'jotai';
-import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import NotificationIcon from '@/assets/icons/icon_notification.svg';
+import KVentureLogo from '@/assets/icons/logo_md.svg';
 import HeaderUserProfile from '@/components/common/HeaderUserProfile';
 import Loading from '@/components/common/Loading';
 import NotificationModal from '@/components/myNotificatons/NotificationModal';
@@ -11,16 +13,18 @@ import useFetchData from '@/hooks/useFetchData';
 import useResponsive from '@/hooks/useResponsive';
 import useScrollLock from '@/hooks/useScrollLock';
 import { getUserData } from '@/lib/apis/userApis';
-import { profileImageAtom } from '@/state/profileImageAtom';
+import { nicknameAtom, profileImageAtom } from '@/state/profileAtom';
 import { User } from '@/types/userTypes';
 
 import { ProfileMenu } from './ProfileMenu';
 
 function Header() {
+  const [nickname, setNickname] = useAtom(nicknameAtom);
   const [profileImage, setProfileImage] = useAtom(profileImageAtom);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const { isMobile } = useResponsive();
+
   useScrollLock({
     isOpen: isNotificationModalOpen,
     additionalCondition: isMobile,
@@ -41,10 +45,11 @@ function Header() {
   const isLoggedIn = isSuccess;
 
   useEffect(() => {
-    if (user && user.profileImageUrl) {
+    if (user) {
       setProfileImage(user.profileImageUrl);
+      setNickname(user.nickname);
     }
-  }, [user]);
+  }, [user, setProfileImage, setNickname]);
 
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
@@ -84,14 +89,9 @@ function Header() {
   return (
     <header className="h-[70px] border-b border-gray-300 bg-white p-4 align-center">
       <div className="layout-content-container h-[30px] justify-between">
-        <Link href="/">
+        <Link href="/" onClick={() => redirect('/')}>
           <div className="mr-10 flex cursor-pointer items-center">
-            <Image
-              src="/assets/icons/logo_md.svg"
-              alt="K-Venture 로고"
-              width={165}
-              height={28}
-            />
+            <KVentureLogo />
           </div>
         </Link>
         {isLoggedIn ? (
@@ -100,12 +100,7 @@ function Header() {
               onClick={handleNotificationClick}
               onBlur={handleNotificationModalClose}
             >
-              <Image
-                src="/assets/icons/icon_notification.svg"
-                alt="알림"
-                width={20}
-                height={20}
-              />
+              <NotificationIcon />
             </button>
             <div className="mx-4 h-4/5 border-[1px] border-l border-kv-gray-300"></div>
             {user && (
@@ -114,7 +109,7 @@ function Header() {
                 onBlur={handleProfileMenuClose}
               >
                 <HeaderUserProfile
-                  nickname={user.nickname}
+                  nickname={nickname}
                   profileImageUrl={profileImage}
                 />
               </button>
